@@ -1,0 +1,181 @@
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	.current{
+		border: solid black 1px;
+		padding: 20px;
+	}
+	.left_block, .right_block{
+		float: left;
+	}
+	.insert_block{
+		margin-left: 20px;
+	}
+	.video_list{
+		margin-top: 20px;
+		margin-left: 20px;
+		border: solid black 1px;
+		min-height: 100px;
+	}
+	.video_item{
+		margin-bottom: 5px;
+		padding: 5px;
+		border: solid black 1px;
+	}
+	.reference{
+		margin-top: 20px;
+		margin-left: 20px;
+		border: solid black 1px;
+		min-height: 100px;
+		padding: 5px;
+	}
+	.cur_video{
+		color: white;
+		background-color: blue;
+	}
+	.hide_area{
+		display: none;
+	}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="http://www.youtube.com/player_api"></script>
+	<script type="text/javascript">
+		var player;
+		var current;
+		var video_list;
+		
+		function onYouTubePlayerAPIReady() {
+			if(video_list.length>0){
+				var get_video_id = video_list[current];
+				$(".left_block legend").text(get_video_id);
+				player = new YT.Player('player', {
+					height: '390',
+					width: '640',
+					videoId: get_video_id,
+					events: {
+						'onReady': onPlayerReady,
+						'onStateChange': onPlayerStateChange
+					}
+				});
+			}
+		}
+
+		// autoplay video
+		function onPlayerReady(event) {
+			event.target.playVideo();
+		}
+
+		// when video ends
+		function onPlayerStateChange(event) {
+			if(event.data === 0) {
+				current++;
+				if(current>=video_list.length){
+					current=0;
+				}
+				setCookie("video_current", current, 30);
+				$("iframe#player").remove();
+				$("<div>").attr("id","player").appendTo($(".left_block"));
+				$(".video_item:nth-child("+(current+2)+")").addClass("cur_video").siblings().removeClass("cur_video");
+				onYouTubePlayerAPIReady();
+			}
+		}
+
+		function refresh_data(video){
+			var get_video_list = getCookie("video_list");
+			if(get_video_list.length!=0){
+				video_list = get_video_list.split(",");
+			}else{
+				video_list = [];
+			}
+			if(video.length!=0){
+				video_list.push(video);
+				setCookie("video_list", video_list.join(), 30);
+			}
+
+			var get_current = getCookie("video_current");
+			if(get_current.length!=0){
+				current = parseInt(get_current);
+				if(current>=video_list.length){
+					current=0;
+				}
+			}else{
+				current = 0;
+			}
+			$(".video_list").children("div").each(function(){
+				$(this).remove();
+			});
+			for(var i = 0 ; i < video_list.length ; i++){
+				var clone_item = $(".hide_area .video_item").clone();
+				if(i==current){
+					$(clone_item).addClass("cur_video");
+				}
+				$(clone_item).append(video_list[i]).appendTo($(".video_list"));
+			}
+		}
+
+		function setCookie(cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays*24*60*60*1000));
+			var expires = "expires="+d.toUTCString();
+			document.cookie = cname + "=" + cvalue + "; " + expires;
+		}
+
+		function getCookie(cname) {
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0)==' ') c = c.substring(1);
+				if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+			}
+			return "";
+		}
+
+		$(function(){
+			refresh_data("");
+			$("#add_video").click(function(){
+				var get_video = $(this).siblings("input").val();
+				$(this).siblings("input").val("");
+				if(get_video.length!=0){
+					refresh_data(get_video);
+					onYouTubePlayerAPIReady();
+				}
+			})
+		})
+	</script>
+</head>
+<body>
+	<fieldset class="left_block">
+		<legend><?php echo $current ?></legend>
+		<div id="player"></div>
+	</fieldset>
+	<div class="right_block">
+		<div class="insert_block">
+			<input type="text" placeholder="put youtube video key..." />
+			<input type="button" value="add" id="add_video">
+		</div>
+		<fieldset class="video_list">
+			<legend>Video List</legend>
+			<div class="video_item"></div>
+		</fieldset>
+		<div class="reference">
+			Reference:
+			<div>
+				<a href="http://www.w3schools.com/js/js_cookies.asp" target="_blank">JavaScript Cookies</a>
+			</div>
+			<div>
+				<a href="http://stackoverflow.com/questions/7853904/how-to-detect-when-a-youtube-video-finishes-playing" target="_blank">How to detect when a youtube video finishes playing?</a>
+			</div>
+			<div>
+				<a href="https://developers.google.com/youtube/iframe_api_reference">YouTube Player API Reference for iframe Embeds</a>
+			</div>
+		</div>
+	</div>
+	<div class="hide_area">
+		<div class="video_item">
+			<div class>X</div>
+		</div>
+	</div>
+</body>
+</html>
