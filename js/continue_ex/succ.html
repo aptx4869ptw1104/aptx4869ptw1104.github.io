@@ -19,6 +19,8 @@
 			function add_obj(){
 				var x = $("#target_obj").clone().removeAttr("id").removeClass("hide_container").addClass("image_obj");
 				$(".show_container").append(x);
+				$(".image_obj").unbind("click");
+				show_index();
 				setTimeout(add_obj, 1000);
 			}
 		</script>
