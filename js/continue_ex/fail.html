@@ -14,7 +14,10 @@
 			})
 			function show_index(){
 				$(".image_obj").click(function(){
-					alert($(this).index($(".show_container .image_obj")));
+					// alert($(this).index($(".show_container .image_obj")));
+					$(".show_container .image_obj").map(function(index, element) {
+						console.log(index+","+element);
+					})
 				});
 			}
 			function add_obj(){
