@@ -1,21 +1,37 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+			.hide_container{
+				display: none;
+			}
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				show_index();
+				setTimeout(add_obj, 1000);
+			})
+			function show_index(){
+				$(".image_obj").click(function(){
+					alert($(this).index($(".show_container .image_obj")));
+				});
+			}
+			function add_obj(){
+				var x = $("#target_obj").clone().removeAttr("id").removeClass("hide_container").addClass("image_obj");
+				$(".show_container").append(x);
+				setTimeout(add_obj, 1000);
+			}
+		</script>
 	</head>
 	<body>
-		<fieldset>
-			<legend>rwd</legend>
-			<a href="rwd/fixed_center/" target="_blank">置中方型</a>
-			<br>
-			<a href="rwd/blocks_arrange/" target="_blank">社群按鈕</a>
-			<br>
-			<a href="css/odd_even/" target="_blank">單偶數行CSS</a>
-			<br>
-			<a href="lib/youtube_list/" target="_blank">youtube_list</a>
-			<br>
-			<a href="js/continue_ex/fail.html" target="_blank">增加事件綁定(錯誤例)</a>
-			<br>
-			<a href="js/continue_ex/succ.html" target="_blank">增加事件綁定(正確例)</a>
-		</fieldset>
+		<div class="show_container">
+			<div class="image_obj">
+				<img src="http://icons.iconarchive.com/icons/gakuseisean/ivista/128/Good-or-Tick-icon.png">
+			</div>
+		</div>
+		<div class="hide_container" id="target_obj">
+			<img src="http://icons.iconarchive.com/icons/gakuseisean/ivista/128/Good-or-Tick-icon.png">
+		</div>
 	</body>
 </html>
