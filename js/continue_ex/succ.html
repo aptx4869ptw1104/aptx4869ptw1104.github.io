@@ -2,7 +2,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<style type="text/css">
-			.image_obj{
+			.hide_container{
 				display: none;
 			}
 		</style>
@@ -17,7 +17,7 @@
 				});
 			}
 			function add_obj(){
-				var x = $("#target_obj").clone().removeAttr("target_obj");
+				var x = $("#target_obj").clone().removeAttr("id").removeClass("hide_container").addClass("image_obj");
 				$(".show_container").append(x);
 				setTimeout(add_obj, 1000);
 			}
@@ -29,7 +29,7 @@
 				<img src="http://icons.iconarchive.com/icons/gakuseisean/ivista/128/Good-or-Tick-icon.png">
 			</div>
 		</div>
-		<div class="image_obj" id="target_obj">
+		<div class="hide_container" id="target_obj">
 			<img src="http://icons.iconarchive.com/icons/gakuseisean/ivista/128/Good-or-Tick-icon.png">
 		</div>
 	</body>
