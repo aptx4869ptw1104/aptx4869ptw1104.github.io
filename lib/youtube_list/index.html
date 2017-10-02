@@ -50,17 +50,47 @@
 	<script src="http://www.youtube.com/player_api"></script>
 	<script type="text/javascript">
 		var player;
-		var current;
-		var video_list;
 		
+		function getCurrentVideo(){
+			return getCookie("video_current");
+		}
+
+		function getVideoList(){
+			var get_video_list = getCookie("video_list");
+			if(get_video_list.length>0){
+				return get_video_list.split(",");
+			}else{
+				return [];
+			}
+		}
+
+		function getNext(){
+			var video_index = getVideoIndex();
+			video_index++;
+			if(video_index<video_list.length){
+				next_id = video_list[video_index];
+			}else{
+				next_id = video_list[0];
+			}
+			setCookie("video_current", next_id, 30);
+			return next_id;
+		}
+
+		function getVideoIndex(){
+			var ori_video_id = getCurrentVideo();
+			var video_list = getVideoList();
+			return video_list.indexOf(ori_video_id);
+		}
+
 		function onYouTubePlayerAPIReady() {
+			var video_list = getVideoList();
 			if(video_list.length>0){
-				var get_video_id = video_list[current];
-				$(".left_block legend").text(get_video_id);
+				var video_id = getCurrentVideo();
+				$(".left_block legend").text(video_id);
 				player = new YT.Player('player', {
 					height: '390',
 					width: '640',
-					videoId: get_video_id,
+					videoId: video_id,
 					events: {
 						'onReady': onPlayerReady,
 						'onStateChange': onPlayerStateChange
@@ -77,42 +107,20 @@
 		// when video ends
 		function onPlayerStateChange(event) {
 			if(event.data === 0) {
-				current++;
-				if(current>=video_list.length){
-					current=0;
-				}
-				setCookie("video_current", current, 30);
+				var index = getVideoIndex();
 				$("iframe#player").remove();
 				$("<div>").attr("id","player").appendTo($(".left_block"));
-				$(".video_item:nth-child("+(current+2)+")").addClass("cur_video").siblings().removeClass("cur_video");
+				$(".video_container .video_item:nth-child("+(current+1)+")").addClass("cur_video").siblings().removeClass("cur_video");
 				onYouTubePlayerAPIReady();
 			}
 		}
 
 		function refresh_data(video){
-			var get_video_list = getCookie("video_list");
-			if(get_video_list.length!=0){
-				video_list = get_video_list.split(",");
-			}else{
-				video_list = [];
-			}
-			if(video.length!=0){
-				video_list.push(video);
-				setCookie("video_list", video_list.join(), 30);
-			}
-
-			var get_current = getCookie("video_current");
-			if(get_current.length!=0){
-				current = parseInt(get_current);
-				if(current>=video_list.length){
-					current=0;
-				}
-			}else{
-				current = 0;
-			}
 			$(".video_list").children("div").each(function(){
 				$(this).remove();
 			});
+			var current = getCurrentVideo();
+			var video_list = getVideoList();
 			for(var i = 0 ; i < video_list.length ; i++){
 				var clone_item = $(".hide_area .video_item").clone();
 				if(i==current){
@@ -153,7 +161,7 @@
 			})
 			$(".remove_video").click(function(){
 				var get_video = $(this).siblings(".video_hash").html();
-				var get_video_list = getCookie("video_list");
+				var get_video_list = getVideoList();
 				if(get_video_list.length!=0){
 					video_list = get_video_list.split(",");
 					var video_index = video_list.indexOf(get_video);
@@ -177,7 +185,7 @@
 		</div>
 		<fieldset class="video_list">
 			<legend>Video List</legend>
-			<div class="video_item"></div>
+			<div class="video_container"></div>
 		</fieldset>
 		<div class="reference">
 			Reference:
