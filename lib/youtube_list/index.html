@@ -37,6 +37,10 @@
 	.hide_area{
 		display: none;
 	}
+	.remove_video{
+		float: right;
+    	cursor: pointer;
+	}
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script src="http://www.youtube.com/player_api"></script>
@@ -110,7 +114,7 @@
 				if(i==current){
 					$(clone_item).addClass("cur_video");
 				}
-				$(clone_item).append(video_list[i]).appendTo($(".video_list"));
+				$(clone_item).children(".video_hash").html(video_list[i]).appendTo($(".video_list"));
 			}
 		}
 
@@ -140,6 +144,17 @@
 				if(get_video.length!=0){
 					refresh_data(get_video);
 					onYouTubePlayerAPIReady();
+				}
+			})
+			$(".remove_video").click(function(){
+				var get_video = $(this).siblings(".video_hash").html();
+				var get_video_list = getCookie("video_list");
+				if(get_video_list.length!=0){
+					video_list = get_video_list.split(",");
+					var video_index = video_list.indexOf(get_video);
+					video_list.splice(video_index, 1);
+					setCookie("video_list", video_list);
+					refresh_data("");
 				}
 			})
 		})
@@ -174,7 +189,8 @@
 	</div>
 	<div class="hide_area">
 		<div class="video_item">
-			<div class>X</div>
+			<div class="video_hash">X</div>
+			<div class="remove_video">X</div>
 		</div>
 	</div>
 </body>
