@@ -123,6 +123,7 @@
 		// when video ends
 		function onPlayerStateChange(event) {
 			if(event.data === 0) {
+				getNext();
 				var index = getVideoIndex();
 				$("iframe#player").remove();
 				$("<div>").attr("id","player").appendTo($(".left_block"));
