@@ -114,7 +114,8 @@
 				if(i==current){
 					$(clone_item).addClass("cur_video");
 				}
-				$(clone_item).children(".video_hash").html(video_list[i]).appendTo($(".video_list"));
+				$(clone_item).children(".video_hash").html(video_list[i]);
+				$(clone_item).appendTo($(".video_list"));
 			}
 		}
 
