@@ -126,7 +126,7 @@
 				var index = getVideoIndex();
 				$("iframe#player").remove();
 				$("<div>").attr("id","player").appendTo($(".left_block"));
-				$(".video_container .video_item:nth-child("+(current+1)+")").addClass("cur_video").siblings().removeClass("cur_video");
+				$(".video_container .video_item:nth-child("+(index+1)+")").addClass("cur_video").siblings().removeClass("cur_video");
 				onYouTubePlayerAPIReady();
 			}
 		}
