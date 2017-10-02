@@ -55,6 +55,14 @@
 			return getCookie("video_current");
 		}
 
+		function setNewVideo(hash){
+			if(hash.length>0){
+				var video_list = getVideoList();
+				video_list.push(hash);
+				setCookie("video_list", video_list.join(","), 30);
+			}
+		}
+
 		function getVideoList(){
 			var get_video_list = getCookie("video_list");
 			if(get_video_list.length>0){
@@ -115,7 +123,7 @@
 			}
 		}
 
-		function refresh_data(video){
+		function refresh_data(){
 			$(".video_container").children("div.video_item").each(function(){
 				$(this).remove();
 			});
@@ -150,12 +158,13 @@
 		}
 
 		$(function(){
-			refresh_data("");
+			refresh_data();
 			$("#add_video").click(function(){
 				var get_video = $(this).siblings("input").val();
 				$(this).siblings("input").val("");
 				if(get_video.length!=0){
-					refresh_data(get_video);
+					setNewVideo(get_video);
+					refresh_data();
 					onYouTubePlayerAPIReady();
 				}
 			})
@@ -166,8 +175,8 @@
 					video_list = get_video_list.split(",");
 					var video_index = video_list.indexOf(get_video);
 					video_list.splice(video_index, 1);
-					setCookie("video_list", video_list);
-					refresh_data("");
+					setCookie("video_list", video_list.join(","), 30);
+					refresh_data();
 				}
 			})
 		})
