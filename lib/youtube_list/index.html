@@ -52,7 +52,15 @@
 		var player;
 		
 		function getCurrentVideo(){
-			return getCookie("video_current");
+			var video_current = getCookie("video_current");
+			if(!video_current.length>0){
+				var get_video_list = getVideoList();
+				if(get_video_list.length>0){
+					video_current = get_video_list[0];
+					setCookie("video_current", video_current, 30);
+				}
+			}
+			return video_current;
 		}
 
 		function setNewVideo(hash){
