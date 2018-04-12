@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+			canvas{
+				border:solid black 1px;
+				width: 500px;
+				height: 500px;
+			}
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			function drawBox(ctx, rgb, width, height, x, y) {
+				ctx.fillStyle = "rgb(" + rgb + ")";
+				ctx.fillRect (x, y, width, height);
+			}
+
+			var canvas;
+			var ctx;
+			$(function(){
+				canvas = document.getElementById("canvas");
+				if (canvas.getContext) {
+					ctx = canvas.getContext("2d");
+				}
+				
+				$("#create").click(function(){
+					var rgb = $("#rgb").val();
+					var width = $("#width").val();
+					var height = $("#height").val();
+					var x = $("#x").val();
+					var y = $("#y").val();
+					if(rgb && width && height && x && y){
+						drawBox(ctx, rgb, width, height, x, y);
+						$("#rgb").val("");
+						$("#width").val("");
+						$("#height").val("");
+						$("#x").val("");
+						$("#y").val("");
+					}
+				})
+
+				//reference https://www.baidufe.com/item/65c055482d26ec59e27e.html
+				$("#download").click(function(){
+					var type = 'png';
+					var imgData = canvas.toDataURL(type);
+
+					var checkType = function(type) {
+						type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+						var r = type.match(/png|jpeg|bmp|gif/)[0];
+						return 'image/' + r;
+					};
+
+					imgData = imgData.replace(checkType(type),'image/octet-stream');
+				})
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<div>Create Cquare:</div>
+		<div>RGB:<input type="text" id="rgb" placeholder="ex: 200,0,0" /></div>
+		<div>Width:<input type="text" id="width" placeholder="ex: 200" /></div>
+		<div>Height:<input type="text" id="height" placeholder="ex: 200" /></div>
+		<div>Cord X:<input type="text" id="x" placeholder="ex: 20" /></div>
+		<div>Cord Y:<input type="text" id="y" placeholder="ex: 20" /></div>
+		<div>PS: all count by px</div>
+		<div><input type="button" id="create" value="create"></div>
+		<div><input type="button" id="download" value="download">not working ...</div>
+	</body>
+</html>
